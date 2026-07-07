@@ -1,0 +1,26 @@
+
+name: personal_organizer
+
+services:
+
+  mysql:
+ 
+    image: mysql:8.0
+    container_name: personal_organizer_mysql
+
+    restart: unless-stopped
+
+    ports:
+      - "3307:3306"
+
+    environment:
+      MYSQL_ROOT_PASSWORD: Marat2003.
+      MYSQL_DATABASE: day_organizer_db
+      MYSQL_USER: day_user
+      MYSQL_PASSWORD: Marat2003.
+
+    volumes: 
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
