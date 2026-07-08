@@ -8,5 +8,9 @@ Write-Host "Активируем виртуальное окружение..." -
 Write-Host "Запускает базу данных MySQL..." -ForegroundColor Green
 docker compose up -d
 
+
+Write-Host "Ждём, пока MySQL подготовиться к подключению 15 секунд" -ForegroundColor Yellow
+Start-Sleep -Seconds 15
+
 Write-Host "Запускаем FastAPI бэкенд..." -ForegroundColor Green
 uvicorn app.main:app --reload

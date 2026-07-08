@@ -50,7 +50,24 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 class Base(DeclarativeBase):
     pass
 
-# 6. Тестовый блок запуска
+
+
+
+
+
+
+# 6. Dependency для получения сессии базы данных
+# Эта функция создаёт отдельную сессию для одного API-запроса,
+# отдаёт её endpoint-у и гарантированно закрывает после завершения запроса.
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# 7. Тестовый блок запуска
 # Код внутри этого блока выполнится ТОЛЬКО в том случае, если ты запустишь конкретно этот файл напрямую.
 if __name__ == "__main__":
     try:
