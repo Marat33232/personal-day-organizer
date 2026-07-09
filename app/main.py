@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 from app import models 
-from app.database import Base, engine
-
+from app.database import Base, engine, get_db
 
 
 # Временное создание таблиц для учебного этапа.
@@ -30,3 +31,23 @@ app = FastAPI()
 def health_check():
     return {"status": "ok"}
 
+
+
+
+# Тестовый endpoint для проверки подключения к базе данных через Dependency.
+# Он нужен, чтобы убедиться:
+# 1. FastAPI вызывает get_db()
+# 2. get_db() создаёт SQLAlchemy Session
+# 3. endpoint получает эту сессию в параметр db
+# 4. через db можно выполнить SQL-запрос к MySQL
+# 5. после завершения запроса сессия будет закрыта в get_db()
+@app.get("/db-check")
+def db_check(db: Session = Depends(get_db)):
+        # Выполняем самый простой SQL-запрос.
+        # SELECT 1 не читает реальные таблицы и не меняет данные.
+        # Он просто проверяет, что соединение с MySQL работает.
+        result = db.execute(text("SELECT 1")).scalar()
+
+        # Возвращаем результат проверки.
+        # Если всё хорошо, db_result будет равен 1.
+        return {"status": "ok", "db_result": result}
