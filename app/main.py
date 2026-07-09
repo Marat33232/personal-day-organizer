@@ -5,6 +5,10 @@ from sqlalchemy.orm import Session
 from app import models 
 from app.database import Base, engine, get_db
 
+# Импортируем роутер заметок.
+# Внутри него лежат endpoint-ы GET /notes и POST /notes.
+from app.routers import notes
+
 
 # Временное создание таблиц для учебного этапа.
 # SQLAlchemy смотрит на все модели, которые унаследованы от Base,
@@ -22,6 +26,12 @@ Base.metadata.create_all(bind= engine)
 # Именно этот объект запускает Uvicorn командой:
 # uvicorn app.main:app --reload
 app = FastAPI()
+
+
+
+
+# Подключаем notes router к основному FastAPI-приложению.
+app.include_router(notes.router)
 
 
 # Простой endpoint для проверки, что приложение запустилось.

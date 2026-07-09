@@ -25,7 +25,8 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 # 3. Формирование строки подключения (URL)
 # Это специальная строка, которая говорит SQLAlchemy, куда и как подключаться.
 # mysql+pymysql означает: "Подключись к MySQL, используя драйвер pymysql"[cite: 219].
-SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+SQLALCHEMY_DATABASE_URL = (f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+                           f"?charset=utf8mb4")
 
 # 4. Создание Движка (engine)
 # engine — это наша физическая "труба" к базе данных[cite: 248].
