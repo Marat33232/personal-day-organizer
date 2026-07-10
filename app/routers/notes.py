@@ -90,3 +90,41 @@ def delete_note(note_id: int, db: Session = Depends(get_db)):
     db.commit()
     # Возвращаем сообщение об успешном удалении.
     return {"status": "deleted", "id": note_id}
+
+
+
+
+# Обновить заметку по id.
+# Полный адрес: PUT /notes/{note_id}
+@router.put("/{note_id}")
+def update_mote(
+    note_id: int,
+    title: str = Body(...), 
+    content: str = Body(...),
+    db: Session = Depends(get_db), 
+):
+    # Сначала ищем заметку, которую хотим изменить.
+    note = db.query(models.Note).filter(models.Note.id == note_id).first()
+
+
+    # Если заметка не найдена, возвращаем HTTP 404.
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
+
+    # Меняем поля ORM-объекта.
+    note.title = title
+    note.content = content
+
+    # Фиксируем изменения в базе данных.
+    db.commit()
+
+    # Обновляем объект из базы.
+    db.refresh(note)
+
+    # Возвращаем обновлённую заметку.
+    return {
+        "id": note.id,
+        "title": note.title,
+        "content": note.content,
+        "created_at": note.created_at,
+    }
